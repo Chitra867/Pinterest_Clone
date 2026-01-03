@@ -5,9 +5,10 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import { HiBell, HiChat, HiSearch } from "react-icons/hi";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 export default function Header() {
   const { data: session } = useSession();
- 
+ const router = useRouter();
   const db = getFirestore(app);
 
   useEffect(()=>{
@@ -49,6 +50,7 @@ export default function Header() {
       <HiChat className="text-[25px] md:text-[40px] text-[40px] text-gray-500 cursor-pointer" />
      {session?.user? <Image
         src={session?.user?.image}
+        onClick={()=>router.push('/'+session.user.email)}
         alt="profile"
         width={50}
         height={50}
