@@ -1,30 +1,37 @@
 'use client'
+
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import app from '../Shared/firebaseConfig'
-import React, { useEffect, use } from 'react'
+import React, { useEffect, useState, use } from 'react'
+import UserInfo from '../components/UserInfo';
 
 function Profile({ params }) {
-    const db=getFirestore(app);
-  const { userId } = use(params)
+  const db = getFirestore(app);
+  const [userInfo, setUserInfo] = useState(null);
+
+  const { userId } = use(params); // ✅ unwrap params promise
 
   useEffect(() => {
-    console.log(userId.replace('%40', '@'))
-    getUserInfo();
-  }, [userId])
+    const decodedUserId = decodeURIComponent(userId);
+    getUserInfo(decodedUserId);
+  }, [userId]);
 
-  const getUserInfo =async ()=>{
-    const docRef = doc(db, "user", userId.replace('%40', '@'));
+  const getUserInfo = async (decodedUserId) => {
+    const docRef = doc(db, "user", decodedUserId);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
+      setUserInfo(docSnap.data());
     } else {
-      // doc.data() will be undefined in this case
       console.log("No such document!");
     }
-  }
+  };
 
-  return <div>profile</div>
+  return (
+    <div>
+      {userInfo && <UserInfo userInfo={userInfo} />}
+    </div>
+  );
 }
 
-export default Profile
+export default Profile;

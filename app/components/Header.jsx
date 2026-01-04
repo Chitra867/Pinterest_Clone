@@ -6,7 +6,8 @@ import Image from "next/image";
 import { HiBell, HiChat, HiSearch } from "react-icons/hi";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-export default function Header() {
+
+ export default function Header() {
   const { data: session } = useSession();
  const router = useRouter();
   const db = getFirestore(app);
@@ -16,7 +17,8 @@ export default function Header() {
   },[session])
 
   const saveUserInfo=async()=>{
-    if (session?.user){
+    if (session?.user)
+      {
       await setDoc(doc(db, "user", session.user.email),{
         userName: session.user.name,
         email: session.user.email,
@@ -26,42 +28,43 @@ export default function Header() {
   }
  
   return (
-    <div className="flex gap-3 ms:gap-2 items-center p-6">
-      <Image
-        src="/pintrest.png"
-        alt="logo"
-        width={50}
-        height={50}
-        className="hover:bg-gray-300 p-2 rounded-full cursor-pointer"
-      />
-      <button className="bg-black text-white p-2 px-4 rounded-full hidden md:block">
-        Home
-      </button>
-      <button className="font-semibold p-2 px-4 rounded-full">Create</button>
-      <div className="bg-[#e9e9e9] p-3 flex gap-3 items-center rounded-full w-full hidden md:flex">
-        <HiSearch className="text-[25px] text-gray-500 md:hidden" />
-        <input
-          type="text"
-          placeholder="Search"
-          className="bg-transparent outline-none"
-        />
-      </div>
-      <HiBell className="text-[25px] md:text-[40px] text-gray-500 cursor-pointer" />
-      <HiChat className="text-[25px] md:text-[40px] text-[40px] text-gray-500 cursor-pointer" />
-     {session?.user? <Image
-        src={session?.user?.image}
-        onClick={()=>router.push('/'+session.user.email)}
-        alt="profile"
-        width={50}
-        height={50}
-        className="hover:bg-gray-300 p-2 rounded-full cursor-pointer"
-      />:
-      <button
-        className="font-semibold p-2 px-4 rounded-full"
-        onClick={() => signIn()}
-      >
-        Login
-      </button>}
+    <div className='flex justify-between 
+     gap-3 md:gap-2 items-center p-6 '>
+        <Image src='/pintrest.png' alt='logo'
+        width={60} height={60} onClick={()=>router.push('/')}
+        className='hover:bg-gray-300 p-2
+        rounded-full cursor-pointer'/>
+        <button className='bg-black
+         text-white p-3 px-6 rounded-full
+         text-[25px]
+          hidden md:block' onClick={()=>router.push('/')}>Home</button>
+        <button className='font-semibold p-3 px-6
+         rounded-full text-[25px]' 
+         onClick={()=>onCreateClick()}>Create</button>
+        <div className='bg-[#e9e9e9] p-3 px-6
+         gap-3 items-center rounded-full w-full hidden md:flex'>
+        <HiSearch className='text-[34px] 
+        text-gray-500'/>
+        <input type="text" placeholder='Search'
+        className='bg-transparent outline-none w-full text-[25px]' />
+       
+        </div>
+        <HiSearch className='text-[25px] 
+        text-gray-500 md:hidden'/>
+        <HiBell className='text-[25px] md:text-[60px] text-gray-500 cursor-pointer'/>
+        <HiChat className='text-[25px] md:text-[60px] text-gray-500 cursor-pointer'/>
+      {session?.user?  
+      <Image src={session.user.image} 
+       onClick={()=>router.push('/'+session.user.email)}
+      alt='user-image' width={60} height={60}
+        className='hover:bg-gray-300 p-2
+        rounded-full cursor-pointer'/>:
+
+        <button className='font-semibold p-2 px-4 rounded-full'
+         onClick={() => signIn()}>Login</button>}
+
+
+
     </div>
   );
 }
